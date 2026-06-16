@@ -1,47 +1,57 @@
-# aistudio_system/pipeline/memory.py
+# pipeline/memory.py
 from typing import List, Dict
-
 
 class PipelineMemory:
     def __init__(self):
         self._history: List[Dict[str, str]] = []
 
-    def add_user_goal(self, goal: str) -> None:
+    def register_system_goal(self, goal: str) -> None:
         self._history.append({
-            "role": "system_goal",
-            "content": f"The high-level user objective is: {goal}",
+            "role": "objective",
+            "content": f"The primary goal to satisfy: {goal}"
         })
 
-    def add_agent_turn(self, raw_model_response: str) -> None:
+    def register_model_thought(self, response_text: str) -> None:
         self._history.append({
-            "role": "model_reasoning",
-            "content": raw_model_response,
+            "role": "thought",
+            "content": response_text
         })
 
-    def add_environment_turn(self, observation: str) -> None:
+    def register_environment_observation(self, observation: str) -> None:
         self._history.append({
-            "role": "environment_observation",
-            "content": f"OBSERVATION / WEB DATA EXTRACED: {observation}",
+            "role": "observation",
+            "content": f"LIVE OBSERVATION REPORT:\n{observation}"
         })
 
-    def export_as_formatted_prompt(self) -> str:
-        """Converts internal trace steps into a clear prompt for the Brain Agent."""
-        formatted_prompt = (
-            "You are an advanced, autonomous agent system operating with live web-browsing capabilities.\n"
-            "Below is the current history of decisions and data observations gathered so far. "
-            "Examine this log and proceed with the next logical action.\n\n"
-        )
+    def generate_context_prompt(self) -> str:
+        prompt_lines = [
+            "You are an advanced, context-aware web-agent running via live browser automation.",
+            "Analyze the historical timeline of thoughts and observations, and determine the next step.",
+            "\n=== HISTORY OF TURNS ==="
+        ]
+        
+        for index, step in enumerate(self._history):
+            role_header = step["role"].upper()
+            prompt_lines.append(f"\n[Turn {index} | {role_header}]\n{step['content']}")
 
-        for index, item in enumerate(self._history):
-            role_header = item["role"].upper().replace("_", " ")
-            formatted_prompt += f"--- STEP {index} | {role_header} ---\n{item['content']}\n\n"
-
-        formatted_prompt += (
-            "INSTRUCTIONS FOR NEXT STEP:\n"
-            "If you need more information from the web to answer the goal, output a command in this EXACT format:\n"
-            "SEARCH: <your query search phrase>\n"
-            "Then stop. Do not write additional commentary if you request search queries.\n\n"
-            "If you have gathered enough factual data to fully answer the objective, output your final result prefixed with:\n"
-            "FINAL ANSWER: <your comprehensive answer>\n"
-        )
-        return formatted_prompt
+        prompt_lines.extend([
+            "\n========================",
+            "INSTRUCTIONS FOR YOUR NEXT STEP:",
+            "- If you need additional data from the web, respond with a search command using this exact format:",
+            "  SEARCH: <query here>",
+            "- If you need to create, generate, or modify a local file on the PC, use this XML-like format:",
+            "  <write_file path=\"filename.ext\">",
+            "  ... file content ...",
+            "  </write_file>",
+            "  You can write multiple files in a single turn if needed.",
+            "- If you need to execute a command on the local machine (e.g., run a Python script, test a file, compile code), use this format:",
+            "  <execute_command>",
+            "  ... shell command ...",
+            "  </execute_command>",
+            "  Commands will be executed inside the local output directory.",
+            "- If you have completed the task and all requested files are written/verified, output your final response prefixed exactly with:",
+            "  FINAL ANSWER: <your answer detail>",
+            "Strictly follow these instruction keywords to avoid parsing errors."
+        ])
+        
+        return "\n".join(prompt_lines)

@@ -70,7 +70,7 @@ class AIStudioBrain(IBrainAgent):
 
             # 3. Type humanized prompt contents
             self.logger.debug(f"[{prompt.trace_id}] Populating prompt text container.")
-            await self.page.type(input_selector, prompt.text, delay=config.HUMAN_TYPING_DELAY_MS)
+            await self.page.type(input_selector, prompt.text, delay=config.HUMAN_KEYPRESS_MIN_SEC * 1000)
 
             # 4. Fire trigger to submit interaction
             self.logger.debug(f"[{prompt.trace_id}] Triggering prompt submission.")

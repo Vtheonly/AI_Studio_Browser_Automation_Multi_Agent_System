@@ -46,11 +46,9 @@ class AIStudioAgent:
 
         while True:
             # Check for standard elements present only when logged in
-            is_input_visible = (
-                await self.page.locator("textarea").is_visible()
-                or await self.page.get_by_placeholder("Type a message").is_visible()
-                or await self.page.get_by_role("textbox").is_visible()
-            )
+            is_input_visible = await self.page.locator('textarea[aria-label="Type something"]').is_visible() or \
+                               await self.page.locator("ms-chat-input textarea").is_visible()
+                               
             if is_input_visible:
                 print("Workspace detected. Authentication successful.")
                 break
@@ -61,13 +59,19 @@ class AIStudioAgent:
         Sends a prompt to the AI Studio interface and scrapes the output
         once generation is complete.
         """
-        input_selector = "textarea"
+
+        # Target the specific chat input textarea first
+        input_selector = 'textarea[aria-label="Type something"]'
         try:
             await self.page.wait_for_selector(input_selector, timeout=10000)
         except Exception:
-            # Fallback to general textbox role if the element structure shifts
-            input_selector = '[role="textbox"]'
-            await self.page.wait_for_selector(input_selector, timeout=5000)
+            # Fallback to secondary container checks
+            input_selector = "ms-chat-input textarea"
+            try:
+                await self.page.wait_for_selector(input_selector, timeout=5000)
+            except Exception:
+                input_selector = "textarea"
+                await self.page.wait_for_selector(input_selector, timeout=5000)
 
         # Clear any residue in the text area
         await self.page.focus(input_selector)
