@@ -1,32 +1,58 @@
+# =======================
 # Python
+# =======================
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
-
-# Distribution / packaging
-.Python
-build/
-dist/
 *.egg-info/
+dist/
+build/
+*.egg
 
-# Virtual environments
+# =======================
+# Virtual Environments
+# =======================
 .venv/
 venv/
 ENV/
+env/
 
-# IDEs
+# =======================
+# Session / Profile — created on first login (contains Google session cookies)
+# =======================
+# Sample 1
+aistudio_profile/
+generated_codebase_sample_1/aistudio_profile/
+# Sample 2
+generated_codebase_sample_2/session/storage_state.json
+generated_codebase_sample_2/session/meta.json
+generated_codebase_sample_2/session/login.log
+generated_codebase_sample_2/session/chrome_profile/
+
+# =======================
+# Logs
+# =======================
+*.log
+system_trace.log
+
+# =======================
+# IDE / Editor
+# =======================
 .idea/
 .vscode/
 *.swp
 *.swo
+*~
 
-# Project specific — never commit the browser profile (contains Google session cookies)
-aistudio_profile/
-aistudio_system/aistudio_profile/
-system_trace.log
-*.log
-
+# =======================
 # OS
+# =======================
 .DS_Store
 Thumbs.db
+
+# =======================
+# Downloads / test output (generated artifacts)
+# =======================
+generated_codebase_sample_2/download/test_results.json
+generated_codebase_sample_2/download/test_results.md

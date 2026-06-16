@@ -15,12 +15,19 @@ It exposes two flavors:
 
 ## 1. Install
 
+From the repository root (`../`):
+
 ```bash
 pip install -r requirements.txt
 playwright install chromium
 ```
 
 Python 3.9+ recommended.
+The shared virtualenv at the repo root (`../venv/`) is used by both sample codebases.
+Activate it first:
+```bash
+source ../venv/bin/activate
+```
 
 ## 2. Run the modular pipeline
 
