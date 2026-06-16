@@ -1,0 +1,64 @@
+{
+  "prompt": "What is 2+2? Reply with just the number.",
+  "storage_state_existed": false,
+  "results": [
+    {
+      "name": "PoC1_AIStudioToAPI",
+      "prompt": "What is 2+2? Reply with just the number.",
+      "success": false,
+      "response": null,
+      "error": "session_expired: bounced to Google sign-in. Re-run --relogin.",
+      "error_class": "AUTH_WALL (article \u00a71: Authentication & Session Breakage)",
+      "latency_ms": 1670,
+      "wall_ms": 1683,
+      "debug_steps": [
+        "navigated \u2192 https://accounts.google.com/v3/signin/identifier?continue=https%3A%2F%2Faistudio.google.com%2Fapp%2Fprompts%2Fnew_chat&dsh=S-651002449%3A1781621154318081&followup=https%3A%2F%2Faistudio.google.com%2Fapp%2Fprompts%2Fnew_chat&passive=1209600&flowName=GlifWebSignIn&flowEntry=ServiceLogin&ifkv=AcDsRvyhbYwJD72mt_k0DigdgyqL64dw4jn4iWUQ5V_gRX4vgOoZ_l32vINDeuGF1hj-4BJMXv4LBA"
+      ]
+    },
+    {
+      "name": "PoC2_MultiAgent",
+      "prompt": "Based on current public sources, briefly answer: What is 2+2? Reply with just the number.",
+      "success": false,
+      "response": null,
+      "error": "session_expired: bounced to Google sign-in. Re-run --relogin.",
+      "error_class": "AUTH_WALL (article \u00a71: Authentication & Session Breakage)",
+      "latency_ms": 3710,
+      "wall_ms": 3710,
+      "web_needed": true,
+      "web_matched": [
+        "current"
+      ],
+      "trace": [
+        "orchestrator: web_needed=True matched=['current']",
+        "orchestrator: invoking WebAgent.gather_info()",
+        "web_agent: fetched 0 pages in 3005ms",
+        "orchestrator: built final prompt (len=89)",
+        "orchestrator: invoking AIBrainAgent.ask() (PoC #1)",
+        "brain: error=session_expired: bounced to Google sign-in. Re-run --relogin. latency=693ms"
+      ],
+      "final_prompt_excerpt": "Based on current public sources, briefly answer: What is 2+2? Reply with just the number.",
+      "debug_steps": [
+        "navigated \u2192 https://accounts.google.com/v3/signin/identifier?continue=https%3A%2F%2Faistudio.google.com%2Fapp%2Fprompts%2Fnew_chat&dsh=S52700820%3A1781621157976701&followup=https%3A%2F%2Faistudio.google.com%2Fapp%2Fprompts%2Fnew_chat&passive=1209600&flowName=GlifWebSignIn&flowEntry=ServiceLogin&ifkv=AcDsRvygA_NePHlE37Jax4G9YHybCmHgVAqF9U0951AUiOovoTGG9LUx_c-5ieYS7qi-3y87-UMY"
+      ]
+    },
+    {
+      "name": "PoC3_CDPGemini",
+      "prompt": "What is 2+2? Reply with just the number.",
+      "success": true,
+      "response": "4",
+      "error": null,
+      "error_class": "none",
+      "latency_ms": 9986,
+      "wall_ms": 9992,
+      "debug_steps": [
+        "chrome launched with --remote-debugging-port",
+        "connected over CDP; contexts=1",
+        "page ready: https://gemini.google.com/app",
+        "prompt typed",
+        "clicked Send",
+        "response captured (len=1)"
+      ]
+    }
+  ],
+  "timestamp": 1781621168
+}
